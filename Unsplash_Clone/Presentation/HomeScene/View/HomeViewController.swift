@@ -14,8 +14,8 @@ final class HomeViewController: UIViewController {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(
-            ImageCell.self,
-            forCellReuseIdentifier: ImageCell.identifier
+            PhotoCell.self,
+            forCellReuseIdentifier: PhotoCell.identifier
         )
         return tableView
     }()

@@ -10,7 +10,7 @@ import UIKit
 // MARK: - UITableViewDelegate
 extension HomeViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("selected image scale: \((tableView.cellForRow(at: indexPath) as! ImageCell).fetchCellHeight())")
+        print("selected image scale:")
     }
 }
 
@@ -23,21 +23,19 @@ extension HomeViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView,
                    numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return photos.count
     }
     
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
-            withIdentifier: ImageCell.identifier,
+            withIdentifier: PhotoCell.identifier,
             for: indexPath
-        ) as? ImageCell else {
+        ) as? PhotoCell else {
             return UITableViewCell()
         }
-        cell.setupData(
-            image: UIImage(named: "photo\(indexPath.row + 1)")!,
-            title: "예제사진\(indexPath.row + 1)"
-        )
+        let photo = photos[indexPath.row]
+        cell.downloadPhoto(photo)
         return cell
     }
     
