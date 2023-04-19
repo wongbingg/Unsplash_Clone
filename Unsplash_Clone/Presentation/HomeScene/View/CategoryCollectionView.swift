@@ -36,9 +36,9 @@ final class CategoryCollectionView: UICollectionView {
     
     private func setGradient(color: UIColor) {
         let gradient = CAGradientLayer()
-        gradient.frame = .init(origin: .zero, size: CGSize(width: 428, height: 44))
+        gradient.frame = .init(origin: .zero, size: CGSize(width: 428, height: 64))
         gradient.colors = [
-            color.withAlphaComponent(0.3).cgColor,
+            color.withAlphaComponent(0.4).cgColor,
             color.withAlphaComponent(0.0).cgColor
         ]
         gradient.startPoint = CGPoint(x: 0.5, y: 0.0)

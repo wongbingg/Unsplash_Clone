@@ -7,8 +7,11 @@
 
 import UIKit
 import SnapKit
+import UnsplashPhotoPicker
 
 final class HomeViewController: UIViewController {
+    
+    private let viewModel = DefaultHomeViewModel()
     
     private let tableView: UITableView = {
         let tableView = UITableView()
@@ -22,9 +25,11 @@ final class HomeViewController: UIViewController {
     
     private lazy var categoryCollectionView = CategoryCollectionView(layout: makeLayout())
     
+    var photos = [UnsplashPhoto]() // TODO: viewModel.photos를 할당
+    
     // MARK: Initializers
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    init() {
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -37,6 +42,7 @@ final class HomeViewController: UIViewController {
         setupNavigationBar()
         setupTableView()
         setupCategoryView()
+        viewModel.viewDidLoad()
     }
     
     // MARK: Methods
@@ -79,7 +85,7 @@ final class HomeViewController: UIViewController {
         gradient.colors = [
             color.cgColor,
             color.withAlphaComponent(0.7).cgColor,
-            color.withAlphaComponent(0.3).cgColor
+            color.withAlphaComponent(0.4).cgColor
         ]
         gradient.startPoint = CGPoint(x: 0.5, y: 0.5)
         gradient.endPoint = CGPoint(x: 0.5, y: 1.0)
