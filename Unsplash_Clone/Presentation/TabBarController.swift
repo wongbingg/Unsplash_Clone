@@ -39,10 +39,14 @@ final class TabBarController: UITabBarController {
         let submitNavCon = UINavigationController(rootViewController: submitVC)
         let mypageNavCon = UINavigationController(rootViewController: mypageVC)
         
-        setViewControllers([homeNavCon, searchNavCon, submitNavCon, mypageNavCon], animated: true)
+        setViewControllers(
+            [homeNavCon, searchNavCon, submitNavCon, mypageNavCon],
+            animated: true
+        )
         
         tabBar.tintColor = .white
         tabBar.barTintColor = .black
+        tabBar.backgroundColor = .black
     }
 }
 
