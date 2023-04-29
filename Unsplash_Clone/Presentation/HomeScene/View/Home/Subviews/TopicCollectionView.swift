@@ -1,5 +1,5 @@
 //
-//  CategoryCollectionView.swift
+//  TopicCollectionView.swift
 //  Unsplash_Clone
 //
 //  Created by 이원빈 on 2023/04/17.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class CategoryCollectionView: UICollectionView {
+final class TopicCollectionView: UICollectionView {
     
     init(layout: UICollectionViewLayout) {
         super.init(frame: .zero, collectionViewLayout: layout)
@@ -23,8 +23,8 @@ final class CategoryCollectionView: UICollectionView {
         translatesAutoresizingMaskIntoConstraints = false
         backgroundColor = .clear
         showsHorizontalScrollIndicator = false
-        register(CategoryCell.self,
-                 forCellWithReuseIdentifier: CategoryCell.identifier)
+        register(TopicCell.self,
+                 forCellWithReuseIdentifier: TopicCell.identifier)
     }
     
     private func setBackGround() {

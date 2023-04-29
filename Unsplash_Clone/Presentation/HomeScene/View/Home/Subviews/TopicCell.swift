@@ -1,5 +1,5 @@
 //
-//  CategoryCell.swift
+//  TopicCell.swift
 //  Unsplash_Clone
 //
 //  Created by 이원빈 on 2023/04/16.
@@ -7,8 +7,8 @@
 
 import UIKit
 
-final class CategoryCell: UICollectionViewCell {
-    static let identifier = "CategoryCell"
+final class TopicCell: UICollectionViewCell {
+    static let identifier = "TopicCell"
     
     private let label: UILabel = {
         let label = UILabel()
@@ -48,8 +48,8 @@ final class CategoryCell: UICollectionViewCell {
     }
 }
 
-// MARK: - Layout Constraints
-private extension CategoryCell {
+// MARK: - Layout Settings
+private extension TopicCell {
     func addSubviews() {
         addSubview(label)
         addSubview(underBar)
@@ -57,7 +57,9 @@ private extension CategoryCell {
     
     func setupLayout() {
         label.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+            $0.verticalEdges.equalToSuperview()
+            $0.leadingMargin.equalTo(8)
+            $0.trailingMargin.equalTo(-8)
         }
         underBar.snp.makeConstraints {
             $0.horizontalEdges.equalToSuperview()

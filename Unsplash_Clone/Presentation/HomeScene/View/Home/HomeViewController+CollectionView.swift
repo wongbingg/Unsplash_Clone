@@ -18,13 +18,14 @@ extension HomeViewController: UICollectionViewDataSource {
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: CategoryCell.identifier,
+            withReuseIdentifier: TopicCell.identifier,
             for: indexPath
-        ) as? CategoryCell else {
+        ) as? TopicCell else {
             return UICollectionViewCell()
         }
         
-        cell.setupData(text: "Category \(indexPath.row)")
+        
+        cell.setupData(text: Topic.allCases[indexPath.row].title)
         return cell
     }
 }
@@ -34,16 +35,17 @@ extension HomeViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView,
                         didSelectItemAt indexPath: IndexPath) {
-        guard let cell = collectionView.cellForItem(at: indexPath) as? CategoryCell else {
+        guard let cell = collectionView.cellForItem(at: indexPath) as? TopicCell else {
             return
         }
         cell.setUnderBar()
         collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+        viewModel.changeTopic(to: Topic.allCases[indexPath.row])
     }
     
     func collectionView(_ collectionView: UICollectionView,
                         didDeselectItemAt indexPath: IndexPath) {
-        guard let cell = collectionView.cellForItem(at: indexPath) as? CategoryCell else {
+        guard let cell = collectionView.cellForItem(at: indexPath) as? TopicCell else {
             return
         }
         cell.hideUnderBar()
