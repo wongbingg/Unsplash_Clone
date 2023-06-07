@@ -16,7 +16,16 @@ final class HomeViewController: UIViewController {
     private(set) var viewModel = DefaultHomeViewModel()
     private lazy var topicCollectionView = TopicCollectionView(layout: makeLayout())
     
-    private let tableView: UITableView = {
+    let activityIndicator: UIActivityIndicatorView = {
+        let view = UIActivityIndicatorView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.style = .large
+        view.backgroundColor = .systemRed
+//        view.tintColor = .systemBackground
+        return view
+    }()
+    
+    let tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(
@@ -71,12 +80,16 @@ final class HomeViewController: UIViewController {
     
     private func setupTopicCollectionView() {
         view.addSubview(topicCollectionView)
+        view.addSubview(activityIndicator)
         topicCollectionView.dataSource = self
         topicCollectionView.delegate = self
         topicCollectionView.snp.makeConstraints {
             $0.horizontalEdges.equalToSuperview()
             $0.top.equalTo(view.safeAreaLayoutGuide)
             $0.size.height.equalTo(44)
+        }
+        activityIndicator.snp.makeConstraints {
+            $0.top.bottom.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         }
     }
     
@@ -88,7 +101,8 @@ final class HomeViewController: UIViewController {
     }
     
     @objc private func leftBarButtonTapped() {
-        navigationController?.present(InfoViewController(), animated: true)
+//        navigationController?.present(InfoViewController(), animated: true)
+//        tableView.reloadRows(at: [.init(row: 0, section: 0)], with: .fade)
     }
 }
 
@@ -99,6 +113,14 @@ extension HomeViewController: UITableViewDelegate {
                    didSelectRowAt indexPath: IndexPath) {
         
         print("row \(indexPath.row) is tapped!")
+        let vc = DetailViewContoller(
+            name: viewModel.photos.value[indexPath.row].user.name ?? "unknown"
+        )
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indeddxPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
     }
 }
 
@@ -115,13 +137,13 @@ extension HomeViewController: UITableViewDelegate {
 //            ) as? PhotoCell {
 //                let f = viewModel.photos.value[indexPath.row]
 //                cell.downloadPhoto(f)
-//                print("미리받아오기 \(f.user.name)")
+//                print("미리받아오기 \(f.user.name)")ddds
 //            }
 //        }
-//    }
+//    }dss
 //}
 
-// MARK: - NavigationBar Settings
+// MARK: - NavigationBar Settingssd
 private extension HomeViewController {
     
     func setupNavigationBar() {

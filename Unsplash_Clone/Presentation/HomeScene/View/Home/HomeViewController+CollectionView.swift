@@ -23,8 +23,6 @@ extension HomeViewController: UICollectionViewDataSource {
         ) as? TopicCell else {
             return UICollectionViewCell()
         }
-        
-        
         cell.setupData(text: Topic.allCases[indexPath.row].title)
         return cell
     }
@@ -39,6 +37,12 @@ extension HomeViewController: UICollectionViewDelegate {
             return
         }
         cell.setUnderBar()
+        // TODO: ActivityIndicator 를 띄우고 1초뒤 해제하기
+        activityIndicator.startAnimating()
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
+            self.tableView.reloadRows(at: [.init(row: 0, section: 0)], with: .fade)
+            self.activityIndicator.stopAnimating()
+        }
         collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         viewModel.changeTopic(to: Topic.allCases[indexPath.row])
     }
