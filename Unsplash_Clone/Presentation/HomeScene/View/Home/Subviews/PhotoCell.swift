@@ -55,9 +55,9 @@ final class PhotoCell: UITableViewCell {
         unsplashTitle.text = photo.user.name
         
         guard let url = photo.urls[.small] else { return }
-        let newURLString = url.absoluteString + "&w=\(UIScreen.main.bounds.width)"
-        let newURL = URL(string: newURLString)!
-        if let cachedResponse = PhotoCell.cache.cachedResponse(for: URLRequest(url: newURL)),
+//        let newURLString = url.absoluteString + "&w=\(UIScreen.main.bounds.width)"
+//        let newURL = URL(string: newURLString)!
+        if let cachedResponse = PhotoCell.cache.cachedResponse(for: URLRequest(url: url)),
            let image = UIImage(data: cachedResponse.data) {
             photoImageView.image = image
 //            photoImageView.image = image.resizeTo(newWidth: UIScreen.main.bounds.width)
@@ -65,7 +65,7 @@ final class PhotoCell: UITableViewCell {
             return
         }
         
-        imageDataTask = URLSession.shared.dataTask(with: newURL) { [weak self] (data, response, error) in
+        imageDataTask = URLSession.shared.dataTask(with: url) { [weak self] (data, response, error) in
             guard let self = self else { return }
             self.imageDataTask = nil
             
