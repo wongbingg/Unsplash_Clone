@@ -20,4 +20,15 @@ extension UIImage {
         
         return renderImage
     }
+    
+    func adopt(fromLayer layer: CAGradientLayer) -> UIImage {
+        UIGraphicsBeginImageContext(layer.bounds.size)
+        guard let context = UIGraphicsGetCurrentContext() else {
+            return UIImage()
+        }
+        layer.render(in: context)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image!
+    }
 }
