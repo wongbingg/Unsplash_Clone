@@ -26,6 +26,7 @@ final class DetailViewContoller: UIViewController {
     }
     
     func setupNavigationBar() {
+        navigationController?.isNavigationBarHidden = false
         let shareButton: UIButton = {
             let button = UIButton()
             button.tintColor = .white
@@ -59,7 +60,11 @@ final class DetailViewContoller: UIViewController {
         }()
         navigationItem.rightBarButtonItem = .init(customView: shareButton)
         navigationItem.leftBarButtonItem = .init(customView: backButton)
-        navigationItem.title = userName
+        let label = UILabel()
+        label.text = userName
+        label.textColor = .white
+        label.font = UIFont.preferredFont(for: .title3, weight: .bold)
+        navigationItem.titleView = label
     }
     
     @objc private func shareButtonTapped() {
