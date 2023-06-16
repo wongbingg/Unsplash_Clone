@@ -14,18 +14,20 @@ import RxRelay
 final class HomeViewController: UIViewController {
     private let disposeBag = DisposeBag()
     private(set) var viewModel = DefaultHomeViewModel()
-    private lazy var topicCollectionView = TopicCollectionView(layout: makeLayout())
     
-    let activityIndicator: UIActivityIndicatorView = {
+    // MARK: UI Components
+    private let topicCollectionView = TopicCollectionView()
+    
+    private let activityIndicator: UIActivityIndicatorView = {
         let view = UIActivityIndicatorView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.style = .large
-        view.backgroundColor = .systemRed
-//        view.tintColor = .systemBackground
+        view.backgroundColor = .black
+        view.layer.opacity = 0.7
         return view
     }()
     
-    let tableView: UITableView = {
+    private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(
@@ -33,6 +35,32 @@ final class HomeViewController: UIViewController {
             forCellReuseIdentifier: PhotoCell.identifier
         )
         return tableView
+    }()
+    
+    private let customNavigationBar: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+//        view.backgroundColor = .black.withAlphaComponent(0.3)
+        view.layer.contents = UIImage(named: "statusBar3")?.cgImage
+        return view
+    }()
+    
+    private let button: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(UIImage(systemName: "plus"), for: .normal)
+        button.tintColor = .white
+        button.addTarget(self, action: #selector(leftBarButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    private let naviTitle: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Unsplash"
+        label.font = UIFont.preferredFont(for: .title3, weight: .bold)
+        label.textColor = .white
+        return label
     }()
     
     // MARK: Initializers
@@ -47,25 +75,25 @@ final class HomeViewController: UIViewController {
     // MARK: View LifeCycles
     override func viewDidLoad() {
         super.viewDidLoad()
+        addSubviews()
+        setConstraints()
         setupNavigationBar()
         setupTableView()
         setupTopicCollectionView()
         viewModel.viewDidLoad()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setupNavigationBar()
+    }
+    
     // MARK: Methods
     private func setupTableView() {
-        view.addSubview(tableView)
         tableView.delegate = self
-//        tableView.prefetchDataSource = self
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 500
         tableView.backgroundColor = .black.withAlphaComponent(0.9)
-        
-        tableView.snp.makeConstraints {
-            $0.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
-            $0.top.equalTo(view.snp.top)
-        }
         
         viewModel.photos.bind(
             to: tableView.rx.items(
@@ -79,34 +107,77 @@ final class HomeViewController: UIViewController {
     }
     
     private func setupTopicCollectionView() {
-        view.addSubview(topicCollectionView)
-        view.addSubview(activityIndicator)
         topicCollectionView.dataSource = self
         topicCollectionView.delegate = self
-        topicCollectionView.snp.makeConstraints {
-            $0.horizontalEdges.equalToSuperview()
-            $0.top.equalTo(view.safeAreaLayoutGuide)
-            $0.size.height.equalTo(44)
-        }
-        activityIndicator.snp.makeConstraints {
-            $0.top.bottom.leading.trailing.equalTo(view.safeAreaLayoutGuide)
-        }
-    }
-    
-    private func makeLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        layout.estimatedItemSize = .init(width: 150, height: 44)
-        return layout
+        topicCollectionView.makeLayout()
     }
     
     @objc private func leftBarButtonTapped() {
-//        navigationController?.present(InfoViewController(), animated: true)
-//        tableView.reloadRows(at: [.init(row: 0, section: 0)], with: .fade)
+        navigationController?.present(InfoViewController(), animated: true)
     }
 }
 
-// MARK: - UITableViewDelegate
+// MARK: - NavigationBar Setting
+private extension HomeViewController {
+    
+    func setupNavigationBar() {
+        navigationController?.isNavigationBarHidden = true
+    }
+}
+
+// MARK: - Setup Layout
+private extension HomeViewController {
+    
+    func addSubviews() {
+        view.addSubview(tableView)
+        view.addSubview(customNavigationBar)
+        customNavigationBar.addSubview(button)
+        customNavigationBar.addSubview(naviTitle)
+        customNavigationBar.addSubview(topicCollectionView)
+        view.addSubview(activityIndicator)
+    }
+    
+    func setConstraints() {
+        tableView.snp.makeConstraints {
+            $0.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
+            $0.top.equalTo(view.snp.top)
+        }
+        
+        customNavigationBar.snp.makeConstraints {
+            let navigationBarHeight: CGFloat = 44
+            let topicCollectionViewHeight: CGFloat = 44
+            let window = UIApplication.shared.windows.filter { $0.isKeyWindow }.first
+            let statusBarHeight = window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
+            $0.top.equalToSuperview()
+            $0.horizontalEdges.equalToSuperview()
+            $0.height.equalTo(statusBarHeight + navigationBarHeight + topicCollectionViewHeight)
+        }
+        
+        button.snp.makeConstraints {
+            $0.leading.equalToSuperview().inset(16)
+            $0.bottom.equalToSuperview().inset(52)
+        }
+        
+        naviTitle.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.bottom.equalToSuperview().inset(52)
+        }
+        
+        topicCollectionView.snp.makeConstraints {
+            $0.horizontalEdges.equalToSuperview()
+            $0.top.equalTo(naviTitle.snp.bottom)
+            $0.height.equalTo(44)
+            $0.bottom.equalToSuperview().inset(8)
+        }
+        
+        activityIndicator.snp.makeConstraints {
+            $0.top.bottom.leading.trailing.equalToSuperview()
+        }
+    }
+}
+
+
+// MARK: - UITableViewDelegate - Photo List
 extension HomeViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView,
@@ -124,82 +195,53 @@ extension HomeViewController: UITableViewDelegate {
     }
 }
 
-// MARK: - UITableViewDataSourcePrefetching
-// TODO: - 적용해보기
-//extension HomeViewController: UITableViewDataSourcePrefetching {
-//
-//    func tableView(_ tableView: UITableView,
-//                   prefetchRowsAt indexPaths: [IndexPath]) {
-//        for indexPath in indexPaths {
-//            if let cell = tableView.dequeueReusableCell(
-//                withIdentifier: PhotoCell.identifier,
-//                for: indexPath
-//            ) as? PhotoCell {
-//                let f = viewModel.photos.value[indexPath.row]
-//                cell.downloadPhoto(f)
-//                print("미리받아오기 \(f.user.name)")ddds
-//            }
-//        }
-//    }dss
-//}
 
-// MARK: - NavigationBar Settingssd
-private extension HomeViewController {
-    
-    func setupNavigationBar() {
-        
-        let button: UIButton = {
-            let button = UIButton()
-            button.translatesAutoresizingMaskIntoConstraints = false
-            button.setImage(UIImage(systemName: "plus"), for: .normal)
-            button.tintColor = .white
-            button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-            return button
-        }()
-        button.addTarget(self, action: #selector(leftBarButtonTapped), for: .touchUpInside)
-
-        navigationItem.title = "Unsplash"
-        navigationItem.leftBarButtonItem = .init(customView: button)
-        navigationController?.navigationBar.shadowImage = UIImage()
-        navigationController?.navigationBar.isTranslucent = true
-        navigationController?.navigationBar.titleTextAttributes = [
-            .foregroundColor: UIColor.white,
-            .font: UIFont.preferredFont(for: .title3, weight: .bold)
-        ]
-        
-        applyGradient(to: navigationController?.navigationBar)
+// MARK: - UICollectionViewDataSource - TopicList
+extension HomeViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView,
+                        numberOfItemsInSection section: Int) -> Int {
+        return 15
     }
     
-    func applyGradient(to navigationBar: UINavigationBar?) {
-        guard let navigationBar = navigationBar else { return }
-        let gradient = createGradientLayer(withColor: .black, view: navigationBar)
-        navigationBar.setBackgroundImage(
-            UIImage().adopt(fromLayer: gradient),
-            for: .default
-        )
-    }
-    
-    func createGradientLayer(withColor color: UIColor,
-                             view navigationBar: UINavigationBar) -> CAGradientLayer {
-        let gradient = CAGradientLayer()
-        var frame = navigationBar.bounds
+    func collectionView(_ collectionView: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else {
-            return gradient
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: TopicCell.identifier,
+            for: indexPath
+        ) as? TopicCell else {
+            return UICollectionViewCell()
         }
-        frame.size.height += windowScene.statusBarManager?.statusBarFrame.size.height ?? 0.0
-        frame.origin.y -= windowScene.statusBarManager?.statusBarFrame.size.height ?? 0.0
-        gradient.frame = frame
-        gradient.colors = [
-            color.withAlphaComponent(0.9).cgColor,
-            color.withAlphaComponent(0.7).cgColor,
-            color.withAlphaComponent(0.4).cgColor
-        ]
-        gradient.startPoint = CGPoint(x: 0.5, y: 0.5)
-        gradient.endPoint = CGPoint(x: 0.5, y: 1.0)
-        return gradient
+        cell.setupData(text: Topic.allCases[indexPath.row].title)
+        return cell
     }
+}
 
+// MARK: - UICollectionViewDelegate - TopicList
+extension HomeViewController: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        didSelectItemAt indexPath: IndexPath) {
+        guard let cell = collectionView.cellForItem(at: indexPath) as? TopicCell else {
+            return
+        }
+        cell.setUnderBar()
+        activityIndicator.startAnimating()
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
+            self.tableView.reloadRows(at: [.init(row: 0, section: 0)], with: .none)
+            self.activityIndicator.stopAnimating()
+        }
+        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+        viewModel.changeTopic(to: Topic.allCases[indexPath.row])
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        didDeselectItemAt indexPath: IndexPath) {
+        guard let cell = collectionView.cellForItem(at: indexPath) as? TopicCell else {
+            return
+        }
+        cell.hideUnderBar()
+    }
 }
 
 #if canImport(SwiftUI) && DEBUG
