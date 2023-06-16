@@ -9,8 +9,8 @@ import UIKit
 
 final class TopicCollectionView: UICollectionView {
     
-    init(layout: UICollectionViewLayout) {
-        super.init(frame: .zero, collectionViewLayout: layout)
+    init() {
+        super.init(frame: .zero, collectionViewLayout: UICollectionViewLayout())
         setupInitialSetting()
         setBackGround()
     }
@@ -30,8 +30,15 @@ final class TopicCollectionView: UICollectionView {
     private func setBackGround() {
         let bgView = UIView()
         bgView.frame = CGRect(origin: frame.origin, size: CGSize(width: 428, height: 44))
+        bgView.backgroundColor = .clear
         backgroundView = bgView
-        setGradient(color: .black)
+    }
+    
+    func makeLayout() {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.estimatedItemSize = .init(width: 150, height: 44)
+        setCollectionViewLayout(layout, animated: false)
     }
     
     private func setGradient(color: UIColor) {
