@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		AF3094B029ED6A7D00370068 /* TopicCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3094AF29ED6A7D00370068 /* TopicCollectionView.swift */; };
-		AF3094B429ED75EC00370068 /* HomeViewController+CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3094B329ED75EC00370068 /* HomeViewController+CollectionView.swift */; };
 		AF326C4B29F12E2B00D53CB4 /* Topic.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF326C4A29F12E2B00D53CB4 /* Topic.swift */; };
 		AF326C4F29F12EE900D53CB4 /* API_Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AF326C4E29F12EE900D53CB4 /* API_Info.plist */; };
 		AF326C5129F12F1C00D53CB4 /* Bundle+.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF326C5029F12F1C00D53CB4 /* Bundle+.swift */; };
@@ -46,7 +45,6 @@
 
 /* Begin PBXFileReference section */
 		AF3094AF29ED6A7D00370068 /* TopicCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicCollectionView.swift; sourceTree = "<group>"; };
-		AF3094B329ED75EC00370068 /* HomeViewController+CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeViewController+CollectionView.swift"; sourceTree = "<group>"; };
 		AF326C4A29F12E2B00D53CB4 /* Topic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Topic.swift; sourceTree = "<group>"; };
 		AF326C4E29F12EE900D53CB4 /* API_Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = API_Info.plist; sourceTree = "<group>"; };
 		AF326C5029F12F1C00D53CB4 /* Bundle+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+.swift"; sourceTree = "<group>"; };
@@ -164,7 +162,6 @@
 			isa = PBXGroup;
 			children = (
 				AF98EDB929EABF1900F19B59 /* HomeViewController.swift */,
-				AF3094B329ED75EC00370068 /* HomeViewController+CollectionView.swift */,
 				AF4CBCB029F522D4005331AF /* Subviews */,
 			);
 			path = Home;
@@ -400,7 +397,6 @@
 				AFFE040C29EFAC89006F63C7 /* APIError.swift in Sources */,
 				AF855E8829FCE1F90071D28F /* DetailViewController.swift in Sources */,
 				AFC2F9E629F0F3F8007C2B11 /* InfoViewController.swift in Sources */,
-				AF3094B429ED75EC00370068 /* HomeViewController+CollectionView.swift in Sources */,
 				AF833A8329EEC2DA006EFA73 /* PhotoCell.swift in Sources */,
 				AF34DA4629F4EBC9003B1AAF /* UnsplashTopicAPI.swift in Sources */,
 				AFF112D029EC125800E04084 /* UIImage+.swift in Sources */,
