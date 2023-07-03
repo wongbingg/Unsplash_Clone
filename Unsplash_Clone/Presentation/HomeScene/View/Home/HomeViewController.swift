@@ -40,7 +40,6 @@ final class HomeViewController: UIViewController {
     private let customNavigationBar: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-//        view.backgroundColor = .black.withAlphaComponent(0.3)
         view.layer.contents = UIImage(named: "statusBar3")?.cgImage
         return view
     }()
@@ -50,7 +49,7 @@ final class HomeViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(systemName: "plus"), for: .normal)
         button.tintColor = .white
-        button.addTarget(self, action: #selector(leftBarButtonTapped), for: .touchUpInside)
+        button.addTarget(HomeViewController.self, action: #selector(leftBarButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -102,6 +101,7 @@ final class HomeViewController: UIViewController {
             )
         ) { (row, element, cell) in
             cell.downloadPhoto(element)
+//            cell.setGradientLayer()
         }
         .disposed(by: disposeBag)
     }
@@ -227,6 +227,7 @@ extension HomeViewController: UICollectionViewDelegate {
         }
         cell.setUnderBar()
         activityIndicator.startAnimating()
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
             self.tableView.reloadRows(at: [.init(row: 0, section: 0)], with: .none)
             self.activityIndicator.stopAnimating()

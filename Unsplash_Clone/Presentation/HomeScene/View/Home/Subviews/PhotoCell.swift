@@ -14,7 +14,22 @@ final class PhotoCell: UITableViewCell {
     private let photoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        
         return imageView
+    }()
+    
+    private let dimmingView: UIView = {
+        let view = UIView()
+        // 그라데이션 처리
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 150)
+        gradientLayer.colors = [UIColor.black.cgColor, UIColor.clear.cgColor]
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 1.0)
+        gradientLayer.endPoint = CGPoint(x: 0.5, y: 0.0)
+//
+        view.layer.addSublayer(gradientLayer)
+        
+        return view
     }()
     
     private let unsplashTitle: UILabel = {
@@ -55,13 +70,10 @@ final class PhotoCell: UITableViewCell {
         unsplashTitle.text = photo.user.name
         
         guard let url = photo.urls[.small] else { return }
-//        let newURLString = url.absoluteString + "&w=\(UIScreen.main.bounds.width)"
-//        let newURL = URL(string: newURLString)!
+        
         if let cachedResponse = PhotoCell.cache.cachedResponse(for: URLRequest(url: url)),
            let image = UIImage(data: cachedResponse.data) {
             photoImageView.image = image
-//            photoImageView.image = image.resizeTo(newWidth: UIScreen.main.bounds.width)
-//            self.setGradient(height: self.photoImageView.bounds.size.height)
             return
         }
         
@@ -86,15 +98,11 @@ final class PhotoCell: UITableViewCell {
                     options: [.transitionCrossDissolve]
                 ) {
                     self.photoImageView.image = image
-//                    self.photoImageView.image = image.resizeTo(newWidth: UIScreen.main.bounds.width)
-//                    self.setGradient(height: self.photoImageView.bounds.size.height)
                 }
             }
         }
         imageDataTask?.resume()
     }
-    
-    
     
     override func prepareForReuse() {
         super.prepareForReuse()
@@ -103,34 +111,13 @@ final class PhotoCell: UITableViewCell {
     }
 }
 
-// MARK: - Gradient Layer Settings (Fail..)
-private extension PhotoCell {
-    
-    func setGradient(height: CGFloat) {
-        let gradientLayer = self.createGradientLayer(height: height)
-        photoImageView.layer.insertSublayer(gradientLayer, at: 0)
-    }
-    
-    func createGradientLayer(withColor color: UIColor = .black, height: CGFloat) -> CAGradientLayer {
-        let gradient = CAGradientLayer()
-        gradient.frame = CGRect(origin: .zero, size: CGSize(width: UIScreen.main.bounds.width, height: height))
-        gradient.colors = [
-            color.withAlphaComponent(0.5).cgColor,
-            color.withAlphaComponent(0.3).cgColor,
-            color.withAlphaComponent(0.0).cgColor
-        ]
-        gradient.startPoint = CGPoint(x: 0.5, y: 1.0)
-        gradient.endPoint = CGPoint(x: 0.5, y: 0.5)
-        return gradient
-    }
-}
-
 // MARK: - Layout Settings
 private extension PhotoCell {
     
     func addSubviews() {
         contentView.addSubview(photoImageView)
-        contentView.addSubview(unsplashTitle)
+        photoImageView.addSubview(dimmingView)
+        dimmingView.addSubview(unsplashTitle)
     }
     
     func setupLayout() {
@@ -141,9 +128,14 @@ private extension PhotoCell {
             $0.bottom.equalToSuperview()
         }
         
+        dimmingView.snp.makeConstraints {
+            $0.bottom.leading.trailing.equalToSuperview()
+            $0.height.equalTo(150)
+        }
+        
         unsplashTitle.snp.makeConstraints {
-            $0.leading.equalTo(photoImageView.snp.leading).offset(8)
-            $0.bottom.equalTo(photoImageView.snp.bottom).offset(-8)
+            $0.leading.equalTo(dimmingView.snp.leading).offset(8)
+            $0.bottom.equalTo(dimmingView.snp.bottom).offset(-8)
         }
     }
 }
